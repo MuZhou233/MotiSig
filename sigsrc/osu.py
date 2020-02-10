@@ -1,11 +1,12 @@
 import requests
 import os
+from . import configs
 
 config = {
     'dataurl': 'https://osu.ppy.sh/api/get_user',
-    'avatarurl': 'https://a.ppy.sh/',
-    'token': ''
+    'avatarurl': 'https://a.ppy.sh/'
 }
+
 modemap = {
     '0': 'osu',
     '1': 'taiko',
@@ -21,7 +22,7 @@ def data(attr):
     else:
         mode = attr['mode']
 
-    d = {'k':config['token'], 'u':attr['id'], 'm':mode}
+    d = {'k':configs.token('osu'), 'u':attr['id'], 'm':mode}
     data = requests.post(config['dataurl'], data=d).json()
     data = data[0]
     

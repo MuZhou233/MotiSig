@@ -2,15 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import socket
-
-headers = {
-    'Accept': '*/*',
-    'Accept-Language': 'en-US,en;q=0.8',
-    'Cache-Control': 'max-age=0',
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/48.0.2564.116 Safari/537.36',
-    'Connection': 'keep-alive',
-    'Referer': 'http://www.google.com/'
-}
+from . import configs
 
 def data(attr):
     try:
@@ -29,7 +21,7 @@ def data(attr):
     if id.find('locahost') != -1 or id.find('127.0') != -1 :
         return
 
-    response = requests.get(id, params=params, headers=headers,stream = True)
+    response = requests.get(id, params=params, headers=configs.cheatHeader(),stream = True)
     ip = response.raw._connection.sock.getpeername()[0]
     region = requests.get('http://ip-api.com/json/'+ip).json()
     region = region['countryCode']
