@@ -15,8 +15,9 @@ headers = {
 }
 
 config = {
-    'summurl': 'http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/',
-    'ownedurl': 'http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/',
+    'summurl': 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/',
+    'ownedurl': 'https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/',
+    'appdetailsurl': 'https://store.steampowered.com/api/appdetails/',
     'idurl': 'https://steamidfinder.com/lookup/',
     'token': ''
 }
@@ -34,14 +35,34 @@ def data(attr):
     data = data['response']['players'][0]
 
     d = {'key':config['token'], 'steamid':attr['id'], 'format':'json'}
-    tmp = requests.get(config['ownedurl'].split('\n')[0], params=d).json()
+    tmp = requests.get(config['ownedurl'], params=d).json()
     data['game_count'] = tmp['response']['game_count']
+
+    cappids = ""
+    for x in tmp['response']['games']:
+        cappids += str(x['appid']) + ','
+    cappids = cappids[0:-1]
+    d = { 'appids' : cappids, 'cc' : 'cn' , 'l' : 'cn' , 'filters' : 'price_overview' }
+    tmp = requests.get(config['appdetailsurl'], params=d).json()
+    tot_value, err_count = 0, 0
+    for x in tmp.values():
+        if(x['success']):
+            try:
+                tot_value += x['data']['price_overview']['initial']
+            except TypeError:
+                err_count += 1
+                continue
+        else:
+            err_count += 1
+            continue
+    tot_value /= 100
 
     ret = {}; ret['attr'] = {}; ret['logos'] = []
 
     ret['name'] = data['personaname']
     ret['attr']['Last Log'] = time.strftime('%Y-%m-%d %H:%M', time.localtime(data['lastlogoff']))
     ret['attr']['Game Count'] = data['game_count']
+    ret['attr']['Total Value(Initial)'] = str(tot_value) + "CNY"
     ret['logos'].append(os.path.dirname(os.path.abspath(__file__))+'/steam/logo.png')
 
     try:
