@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding=utf-8 -*-
+
 import web
 import sigsrc
 from siggen import siggen
@@ -5,7 +8,8 @@ import json
 
 urls = (
     '/', 'index',
-    '/api', 'api'
+    '/api', 'api',
+    '/api/', 'api'
 )
 app = web.application(urls, globals())
 
