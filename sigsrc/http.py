@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import socket
+from urllib.parse import urlparse
 from . import configs
 
 def data(attr):
@@ -20,9 +21,9 @@ def data(attr):
         id = id + '/'
     if id.find('locahost') != -1 or id.find('127.0') != -1 :
         return
-
+        
     response = requests.get(id, params=params, headers=configs.cheatHeader(),stream = True)
-    ip = response.raw._connection.sock.getpeername()[0]
+    ip = socket.gethostbyname(urlparse(id).hostname)
     region = requests.get('http://ip-api.com/json/'+ip).json()
     region = region['countryCode']
 
@@ -31,9 +32,8 @@ def data(attr):
 
     ret = {}
     ret['attr'] = {}
-    ret['name'] = soup.find('title').string.strip() 
+    ret['name'] = soup.find('title').string.strip().replace('\n',' ').replace('\t', ' ')
     ret['attr']['URL'] = id
-    ret['attr']['IP'] = ip
     ret['region'] = region
 
     if icon_link is not None:

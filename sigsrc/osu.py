@@ -36,5 +36,8 @@ def data(attr):
     ret['logos'].append(os.path.dirname(os.path.abspath(__file__))+'/osu/'+modemap[mode]+'_black.png')
     ret['region'] = data['country']
     ret['avatar'] = requests.get(config['avatarurl']+data['user_id']).content
+    ret['bg'] = os.path.dirname(os.path.abspath(__file__))+'/osu/triangles_all.png'
+    ret['bg_color'] = '#ff6aab'
+    ret['bg_blend'] = 0.3
 
     return ret

@@ -50,9 +50,9 @@ def data(attr):
     ret = {}; ret['attr'] = {}; ret['logos'] = []
 
     ret['name'] = data['personaname']
-    ret['attr']['Last Log'] = time.strftime('%Y-%m-%d %H:%M', time.localtime(data['lastlogoff']))
+    ret['attr']['Last Log'] = time.strftime('%Y-%m-%d', time.localtime(data['lastlogoff']))
     ret['attr']['Game Count'] = data['game_count']
-    ret['attr']['Total Value'] = str(tot_value) + "CNY"
+    ret['attr']['Total Value'] = "￥" + str(tot_value)
     ret['logos'].append(os.path.dirname(os.path.abspath(__file__))+'/steam/logo.png')
 
     try:
@@ -64,4 +64,6 @@ def data(attr):
             ret['region'] = data['loccountrycode']
 
     ret['avatar'] = requests.get(data['avatarfull']).content
+    ret['bg'] = os.path.dirname(os.path.abspath(__file__))+'/steam/background.jpg'
+
     return ret

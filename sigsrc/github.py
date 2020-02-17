@@ -11,7 +11,6 @@ header = {
 
 def data(attr):
     data = requests.get(config['dataurl']+attr['id'], headers=header).json()
-    print(data)
     ret = {}; ret['attr'] = {}; ret['logos'] = []
 
     ret['name'] = data['name'] if data['name'] != None else data['login']
@@ -19,5 +18,6 @@ def data(attr):
     ret['attr']['Follower'] = data['followers']
     ret['logos'].append(os.path.dirname(os.path.abspath(__file__))+'/github/logo.png')
     ret['avatar'] = requests.get(data['avatar_url'], headers=header).content
+    ret['bg_color'] = '#24292e'
 
     return ret
