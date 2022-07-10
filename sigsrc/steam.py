@@ -17,7 +17,7 @@ def data(attr):
     if not re.match('[0-9]{17}', attr['id']):
         soup = BeautifulSoup(requests.get(config['idurl']+attr['id']).text, 'html.parser')
         for v in soup.find('div', attrs={"class":"panel-body"}).find_all('code'):
-            if re.match('[0-9]{17}', v.string.strip()):
+            if v.string and re.match('[0-9]{17}', v.string.strip()):
                 attr['id'] = v.string.strip()
 
     d = {'key':configs.token('steam'), 'steamids':attr['id'], 'format':'json'}
